@@ -27,8 +27,8 @@ class SchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'=>$this->faker->company,
-            'email'=>$this->faker->companyEmail,
+            'name' => $this->faker->company,
+            'email' => $this->faker->companyEmail,
         ];
     }
 }

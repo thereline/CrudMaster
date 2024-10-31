@@ -7,10 +7,5 @@ use Thereline\CrudMaster\Contracts\EntityContracts\GetEntitiesContract;
 
 /**
  * Interface BaseRepositoryInterface
- * @package Thereline\CrudMaster\Repositories
  */
-interface BaseRepositoryInterface
-    extends CreateEntityContract, GetEntitiesContract
-{
-
-}
+interface BaseRepositoryInterface extends CreateEntityContract, GetEntitiesContract {}

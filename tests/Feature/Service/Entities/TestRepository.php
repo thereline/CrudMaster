@@ -8,14 +8,12 @@ use Thereline\CrudMaster\Services\EntityServices\HasGetEntities;
 
 class TestRepository
 {
-
     use HasCreateEntity;
     use HasGetEntities;
 
-    function __construct(Model $model)
+    public function __construct(Model $model)
     {
         $this->model = $model;
-        $this->setFilterBy(['name','email']);
+        $this->setFilterBy(['name', 'email']);
     }
-
 }

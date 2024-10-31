@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class CrudMasterCommand extends Command
 {
-
     protected $signature = 'crudmaster:generate {model} {--columns=} {--views=blade}';
 
     protected $description = 'Generate CRUD for a model with specified columns';
@@ -34,14 +33,9 @@ class CrudMasterCommand extends Command
         Artisan::call('make:model', [
             'name' => $model,
             '--migration' => true,
-            '--fillable' => $fillable
+            '--fillable' => $fillable,
         ]);
 
         $this->info('Model created successfully.');
     }
-
-
-
-
-
 }

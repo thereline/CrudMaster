@@ -2,9 +2,4 @@
 
 namespace Thereline\CrudMaster;
 
-class CrudMaster {
-
-
-
-
-}
+class CrudMaster {}

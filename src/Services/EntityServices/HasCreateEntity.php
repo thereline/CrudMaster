@@ -14,12 +14,8 @@ trait HasCreateEntity
 {
     use HasCrudMastery;
 
-
     /**
      * Create a new record
-     * @param array $data
-     * @param array $relationships
-     * @return array|int
      */
     public function createEntity(array $data, array $relationships = []): array|int
     {
@@ -30,12 +26,11 @@ trait HasCreateEntity
             // Begin transaction to ensure data integrity
             DB::beginTransaction();
 
-
             // Fill and save the primary model
             $model->fill($data)->saveOrFail();
 
             // Handle relationships if provided
-            if ($relationships){
+            if ($relationships) {
                 foreach ($relationships as $relation => $relationData) {
                     //check relation exist
                     if (method_exists($model, $relation)) {
@@ -43,7 +38,7 @@ trait HasCreateEntity
                             // Single relationship data (associative array)
                             // Associate single relationship for "belongsTo" or "hasOne"
                             $relatedModel = $model->$relation()->create($relationData);
-                        } elseif (is_array($relationData) && !$this->is_assoc($relationData)) {
+                        } elseif (is_array($relationData) && ! $this->is_assoc($relationData)) {
                             // Multiple relationship data (array of associative arrays)
                             // Create related models if relationship is a "hasMany" or "morphMany"
                             $relatedModels = collect($relationData)->map(function ($data) use ($model, $relation) {
@@ -65,12 +60,14 @@ trait HasCreateEntity
             DB::rollBack();
             Log::warning($e->getMessage());
             Log::error($e);
+
             return ExceptionCodes::MODEL_RELATIONSHIP_NOTFOUND;
 
         } catch (UniqueConstraintViolationException $e) {
             DB::rollBack();
             Log::warning($e->getMessage());
             Log::error($e);
+
             return ExceptionCodes::DB_UNIQUE_VIOLATION_ERROR;
 
         } catch (QueryException $e) {
@@ -84,18 +81,18 @@ trait HasCreateEntity
             DB::rollBack();
             Log::warning($e->getMessage());
             Log::error($e);
+
             return ExceptionCodes::FATAL_ERROR;
         }
 
-        Log::info(class_basename($model) .' and relationships created successfully');
+        Log::info(class_basename($model).' and relationships created successfully');
 
         return $result;
     }
 
     // Helper function to check if an array is associative
-    function is_assoc(array $array): bool
+    public function is_assoc(array $array): bool
     {
         return array_keys($array) !== range(0, count($array) - 1);
     }
-
 }

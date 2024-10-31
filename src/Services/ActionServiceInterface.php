@@ -2,7 +2,4 @@
 
 namespace Thereline\CrudMaster\Services;
 
-interface ActionServiceInterface
-{
-
-}
+interface ActionServiceInterface {}

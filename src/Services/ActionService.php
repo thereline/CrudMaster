@@ -2,7 +2,4 @@
 
 namespace Thereline\CrudMaster\Services;
 
-class ActionService
-{
-
-}
+class ActionService {}

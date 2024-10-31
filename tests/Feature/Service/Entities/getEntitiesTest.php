@@ -1,17 +1,15 @@
 <?php
 
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Thereline\CrudMaster\Tests\Feature\Service\Entities\TestRepository;
 use Workbench\App\Models\School;
 
 uses(RefreshDatabase::class);
 
-
 it('retrieves models successfully', function () {
     // Given
     $schools = School::factory()->create(); // Create a schools using a factory
-    $repo = new TestRepository(new School());
+    $repo = new TestRepository(new School);
 
     // When
     $results = $repo->getEntities();
@@ -25,12 +23,11 @@ it('retrieves models successfully', function () {
 
 });
 
-
 it('applies filters correctly', function () {
     // Given
     School::factory()->create(['name' => 'First School', 'email' => 'first@example.com']);
     School::factory()->create(['name' => 'Second School', 'email' => 'second@example.com']);
-    $repo = new TestRepository(new School());
+    $repo = new TestRepository(new School);
 
     // When
     $results = $repo->getEntities(['search' => 'First School']);

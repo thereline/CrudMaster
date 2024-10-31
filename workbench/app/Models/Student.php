@@ -5,7 +5,6 @@ namespace Workbench\App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class Student extends Model
 {
@@ -13,10 +12,8 @@ class Student extends Model
     use HasFactory;
 
     protected $fillable = [
-        'first_name','last_name','active','school_id'
+        'first_name', 'last_name', 'active', 'school_id',
     ];
-
-
 
     public function school(): BelongsTo
     {

@@ -35,5 +35,6 @@ class ExceptionCodes
     const MODEL_ERROR = 700;
 
     const MODEL_NOTFOUND = 701;
+
     const MODEL_RELATIONSHIP_NOTFOUND = 702;
 }

@@ -9,14 +9,12 @@ use Thereline\CrudMaster\Services\EntityServices\HasGetEntities;
 
 class BaseRepository implements BaseRepositoryInterface
 {
-    function __construct(Model $model)
+    public function __construct(Model $model)
     {
-        $this->model =  $model;
+        $this->model = $model;
 
     }
 
-
-    use HasGetEntities;
     use HasCreateEntity;
-
+    use HasGetEntities;
 }

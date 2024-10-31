@@ -3,40 +3,21 @@
 namespace Thereline\CrudMaster\Services\EntityServices;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Thereline\CrudMaster\ExceptionCodes;
 use Thereline\CrudMaster\HasCrudMastery;
 
-
 trait HasGetEntities
 {
-
     use HasCrudMastery;
 
-    /**
-     * @var array
-     */
     private array $filterBy = [];
-    /**
-     * @var array
-     */
+
     private array $filterableRelations = [];
-
-
-
-
 
     /**
      * Retrieve all records
-     * @param array $filters
-     * @param string $orderBy
-     * @param string $orderDirection
-     * @param int $perPage
-     * @param array $withRelations
-     * @param callable|null $throughFunction
-     * @return array|int
      */
     public function getEntities(array $filters = [], string $orderBy = 'created_at', string $orderDirection = 'desc', int $perPage = 15, array $withRelations = [], ?callable $throughFunction = null): array|int
     {
@@ -45,7 +26,7 @@ trait HasGetEntities
             $model = $this->model;
 
             // Start the query
-             $query = $model;
+            $query = $model;
 
             $search = $filters['search'] ?? null;
             $trashed = $filters['trashed'] ?? null;
@@ -120,9 +101,6 @@ trait HasGetEntities
         return $results->toArray(); // Return the paginated results as an array
     }
 
-    /**
-     * @return array
-     */
     public function getFilterBy(): array
     {
         return $this->filterBy;

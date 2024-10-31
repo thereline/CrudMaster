@@ -7,8 +7,8 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Thereline\CrudMaster\CrudMasterServiceProvider;
-use function Orchestra\Testbench\workbench_path;
 
+use function Orchestra\Testbench\workbench_path;
 
 class TestCase extends Orchestra
 {
@@ -20,10 +20,10 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'Thereline\\CrudMaster\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'Thereline\\CrudMaster\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
         Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'Workbench\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'Workbench\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
@@ -37,7 +37,7 @@ class TestCase extends Orchestra
     protected function getPackageAliases($app): array
     {
         return [
-            'CM' => \Thereline\CrudMaster\Facades\CrudMaster::class
+            'CM' => \Thereline\CrudMaster\Facades\CrudMaster::class,
         ];
     }
 
@@ -51,13 +51,10 @@ class TestCase extends Orchestra
         */
     }
 
-
     /**
      * Define database migrations.
      * To run migrations that are only used for testing purposes
      * and not part of your package,
-     *
-     * @return void
      */
     protected function defineDatabaseMigrations(): void
     {
@@ -65,5 +62,4 @@ class TestCase extends Orchestra
             workbench_path('database/migrations')
         );
     }
-
 }

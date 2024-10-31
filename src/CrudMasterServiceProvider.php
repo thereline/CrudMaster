@@ -27,7 +27,6 @@ class CrudMasterServiceProvider extends PackageServiceProvider
             ->hasCommand(CrudMasterCommand::class);
     }
 
-
     public function registeringPackage()
     {
         // Register the repository interface and its implementation
@@ -39,8 +38,8 @@ class CrudMasterServiceProvider extends PackageServiceProvider
         // Register the ActionService
         $this->app->singleton(
             ActionServiceInterface::class, function ($app) {
-            return new ActionService($app->make());
-        });
+                return new ActionService($app->make());
+            });
 
         // Register the command
         if ($this->app->runningInConsole()) {

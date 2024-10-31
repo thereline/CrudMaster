@@ -9,18 +9,14 @@ use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
 use Thereline\CrudMaster\ExceptionCodes;
-use Thereline\CrudMaster\Services\EntityServices\HasCreateEntity;
 use Workbench\App\Models\School;
 
-
 uses(RefreshDatabase::class);
-
 
 it('creates a entity with no relationships successfully', function () {
     // Given a School and related Students
     $data = ['name' => 'Test School', 'email' => 'test@example.com'];
-    $repository = new TestRepository(new \Workbench\App\Models\School());
-
+    $repository = new TestRepository(new \Workbench\App\Models\School);
 
     // When
     $result = $repository->createEntity($data);
@@ -30,7 +26,6 @@ it('creates a entity with no relationships successfully', function () {
         ->toBeArray()
         ->and($result['name'])->toEqual('Test School')
         ->and($result['email'])->toEqual('test@example.com');
-
 
 });
 
@@ -43,7 +38,7 @@ it('creates a entity with array relationships successfully', function () {
             ['first_name' => 'Student Two', 'active' => false],
         ],
     ];
-    $repository = new TestRepository(new \Workbench\App\Models\School());
+    $repository = new TestRepository(new \Workbench\App\Models\School);
 
     // When
     $result = $repository->createEntity($data, $relationships);
@@ -63,9 +58,9 @@ it('creates a entity with single relationships successfully', function () {
     // Given a School and related Students
     $data = ['name' => 'Test School', 'email' => 'test@example.com'];
     $relationships = [
-        'students' => ['first_name' => 'Student One']
+        'students' => ['first_name' => 'Student One'],
     ];
-    $repository = new TestRepository(new \Workbench\App\Models\School());
+    $repository = new TestRepository(new \Workbench\App\Models\School);
 
     // When
     $result = $repository->createEntity($data, $relationships);
@@ -86,7 +81,7 @@ it('handles unique constraint violations for relationships', function () {
     School::factory()->create(['email' => 'duplicate@example.com']);
     $data = ['name' => 'Another School', 'email' => 'duplicate@example.com'];
     $relationships = [
-        'students' => ['first_name' => 'John Doe']
+        'students' => ['first_name' => 'John Doe'],
     ];
 
     // Mock UniqueConstraintViolationException for primary model save
@@ -108,7 +103,7 @@ it('handles database query exceptions during relationship creation', function ()
     // Given data for a School
     $data = ['name' => 'Test School', 'email' => 'test@example.com'];
     $relationships = [
-        'students' => ['name' => 'Student One']
+        'students' => ['name' => 'Student One'],
 
     ];
 
@@ -130,11 +125,11 @@ it('handles relationship not found exceptions during relationship creation', fun
     // Given data for a School
     $data = ['name' => 'Test School', 'email' => 'test@example.com'];
     $relationships = [
-        'undefined' => ['name' => 'Student One']
+        'undefined' => ['name' => 'Student One'],
 
     ];
 
-    $repository = new TestRepository(new School());
+    $repository = new TestRepository(new School);
 
     // When
     $result = $repository->createEntity($data, $relationships);
@@ -150,7 +145,7 @@ it('handles other exceptions during creation', function () {
     // Mock QueryException for relationship save
     $mockModel = $this->partialMock(School::class, function (MockInterface $mock) {
         $mock->shouldReceive('saveOrFail')
-            ->andThrow(new Exception());
+            ->andThrow(new Exception);
     });
     $repository = new TestRepository($mockModel);
 
