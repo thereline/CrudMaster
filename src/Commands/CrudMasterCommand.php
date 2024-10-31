@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Thereline\CrudMaster\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class CrudMasterCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'crudmaster';
 
     public $description = 'My command';
 
