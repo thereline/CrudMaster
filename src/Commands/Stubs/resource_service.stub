@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\{{ resource }};
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Thereline\CrudMaster\Contracts\ActionContracts\CrudMasterActionServiceContract;
+use Thereline\CrudMaster\Contracts\DataServiceContracts\CrudMasterDataServiceContract;
+use Thereline\CrudMaster\Contracts\HttpContracts\CrudMasterHttpServiceContract;
+
+class {{ resource }}Service
+{
+    public function __construct(
+        public CrudMasterDataServiceContract $dataService,
+        public CrudMasterActionServiceContract $actionService,
+        public CrudMasterHttpServiceContract $httpService
+    ) {
+        $this->dataService->setModelClass(new {{ resource }}());
+        $this->actionService->setModelName({{ resource }}::class);
+    }
+
+    public function create(array $validatedData, Request $request, string $redirectRoute): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $withRelations = [];
+
+        $entity = $this->dataService->createEntity($validatedData, $withRelations);
+        $model = $this->actionService->createAction($entity);
+        return $this->httpService->responseHandler($request, $model, redirectRoute: $redirectRoute);
+    }
+
+    public function update(array $validatedData, Request $request, string $redirectRoute): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $id = $request->integer('id');
+        $relationshipData = [];
+        $withRelations = [];
+        $throughFunction = null;
+
+        $entity = $this->dataService->updateEntity($id, $validatedData, $relationshipData, $withRelations, $throughFunction);
+        $model = $this->actionService->updateAction($entity);
+        return $this->httpService->responseHandler($request, $model, redirectRoute: $redirectRoute);
+    }
+
+    public function delete(Request $request, string $redirectRoute): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $id = $request->integer('id');
+        $withRelations = [];
+        $throughFunction = null;
+
+        $entity = $this->dataService->removeEntity($id, $withRelations, $throughFunction);
+        $model = $this->actionService->removeAction($entity);
+        return $this->httpService->responseHandler($request, $model, redirectRoute: $redirectRoute);
+    }
+
+    public function forceDelete(Request $request, string $redirectRoute): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $id = $request->integer('id');
+        $withRelations = [];
+        $throughFunction = null;
+
+        $entity = $this->dataService->forceRemoveEntity($id, $withRelations, $throughFunction);
+        $model = $this->actionService->forceRemoveAction($entity);
+        return $this->httpService->responseHandler($request, $model, redirectRoute: $redirectRoute);
+    }
+
+    public function getAll(Request $request, string $view): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $filters = [
+            'search' => $request->string('search'),
+            'trashed' => $request->boolean('trashed'),
+        ];
+        $orderBy = $request->string('order_by');
+        $orderDirection = $request->string('order_direction');
+        $perPage = $request->integer('per_page');
+        $withRelations = [];
+        $throughFunction = fn() => null;
+
+        $entities = $this->dataService->findAllEntity($filters, $orderBy, $orderDirection, $perPage, $withRelations, $throughFunction);
+        $models = $this->actionService->findAllAction($entities);
+
+        return $this->httpService->responseHandler($request, $models, $view);
+    }
+
+    public function getOne(Request $request, string $view): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $id = $request->integer('id');
+        $withRelations = [];
+        $throughFunction = null;
+
+        $entity = $this->dataService->findOneEntity($id, $withRelations, $throughFunction);
+        $model = $this->actionService->findOneAction($entity);
+        return $this->httpService->responseHandler($request, $model, view: $view);
+    }
+}

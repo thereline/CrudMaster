@@ -1,0 +1,23 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\{{ resource }};
+
+class {{ resource }}Seeder extends Seeder
+{
+
+
+    /**
+    * Run the database seeders.
+    */
+    public function run(): void
+    {
+
+        //{{ resource }}::factory()->count(50)->create();
+        DB::table('{{ table }}')->insert([
+            {{ columns }}
+        ]);
+    }
+}

@@ -43,7 +43,9 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app): void
     {
-        config()->set('database.default', 'testing');
+        /*config()->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
+
+        config()->set('database.default', 'testing');*/
 
         /*
         $migration = include __DIR__.'/../database/migrations/create_crudmaster_table.php.stub';

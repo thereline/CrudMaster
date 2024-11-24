@@ -1,0 +1,1 @@
+Route::resource('{{resource_lower}}', App\Http\Controllers\{{resource}}Controller::class);

@@ -1,0 +1,30 @@
+{
+    "name": "crudmaster",
+    "version": "1.0.0",
+    "description": "laravel crud package and generator",
+    "main": "index.js",
+    "directories": {
+        "test": "tests"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "dependencies": {
+        "lodash": "^4.17.21",
+        "vue": "^3.0.0"
+    },
+    "devDependencies": {
+        "vite": "^2.6.4"
+    },
+    "keywords": [
+        "laravel",
+        "CRUD",
+        "generator",
+        "vue",
+        "blade"
+    ],
+    "author": "elcomware",
+    "license": "MIT"
+}

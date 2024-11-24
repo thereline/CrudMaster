@@ -36,7 +36,7 @@ class StudentFactory extends Factory
         }; // or null,
 
         return [
-            'school_id' => $school_id,
+            //'school_id' => $school_id,
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'active' => $this->faker->boolean(100),

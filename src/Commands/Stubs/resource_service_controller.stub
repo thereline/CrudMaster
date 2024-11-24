@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Model\{{resource}};
+use App\Services\{{resource}}Service;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
+
+class {{resource}}Controller extends Controller
+{
+
+    public function __construct(protected {{resource}}Service ${{resource_lower}}Service)
+    {
+    }
+
+     /**
+      * Display a listing of the {{resource}}.
+      */
+    public function index(Request $request): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        return $this->{{resource_lower}}Service->getAll(
+        Request:$request,
+        View:'{{resource}}/Index'
+        );
+    }
+
+     /**
+      * Show the form for creating a new {{resource}}.
+      */
+    public function create():View
+    {
+        //return Inertia::Render('{{resource}}/Create');
+        //return view('{{resource}}\Create');
+    }
+
+
+    /**
+     * Store a newly created {{resource}} in storage.
+     */
+    public function store(Request $request) : View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $validatedData = $request->validated();
+        $redirectRoute = route('{{resource_lower}}.index');
+
+        return $this->{{resource_lower}}Service->create{{resource}}($validatedData, $request, $redirectRoute);
+    }
+
+    /**
+     * Display the specified {{resource}}.
+     */
+    public function show(Request $request)
+    {
+        $view = '{{resource}}\Show';
+
+        return $this->{{resource_lower}}Service->getOne($request, $view);
+    }
+
+    /**
+     * Show the form for editing the specified {{resource}}.
+     */
+    public function edit(Request $request)
+    {
+
+       $view = '{{resource}}\Edit';
+       return $this->{{resource_lower}}Service->getOne($request, $view);
+
+    }
+
+    /**
+     * Update the specified {{resource}} in storage.
+     */
+    public function update(Request $request)
+    {
+        $validatedData = $request->validated();
+        $redirectRoute = route('{{resource_lower}}.index');
+        return $this->{{resource_lower}}Service->update{{resource}}($validatedData,$request,$redirectBack,$redirectRoute );
+    }
+
+
+    /**
+     * Remove the specified {{resource}} from storage.
+     */
+    public function destroy(Request $request)
+    {
+        $redirectRoute = route('{{resource_lower}}.index');
+        return $this->{{resource_lower}}Service->delete{{resource}}($request,$redirectRoute);
+    }
+
+     /**
+      * Destroy the specified {{Request $request}} from storage.
+     */
+    public function forceDelete($id)
+    {
+        $redirectRoute = route('{{resource_lower}}.index');
+        return $this->{{resource_lower}}Service->delete{{resource}}($request,$redirectRoute);
+    }
+}
+
