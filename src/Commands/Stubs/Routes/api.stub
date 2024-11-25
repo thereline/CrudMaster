@@ -1,0 +1,6 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{{resource}}Controller;
+
+Route::resource('{{resource_lower}}', {{resource}}Controller::class);

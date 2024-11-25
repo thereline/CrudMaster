@@ -5,10 +5,17 @@ namespace Thereline\CrudMaster;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Thereline\CrudMaster\Commands\CrudMasterCommand;
-use Thereline\CrudMaster\Contracts\BaseRepositoryInterface;
-use Thereline\CrudMaster\Repositories\BaseRepository;
-use Thereline\CrudMaster\Services\ActionService;
-use Thereline\CrudMaster\Services\ActionServiceInterface;
+use Thereline\CrudMaster\Commands\CrudMasterControllerCommand;
+use Thereline\CrudMaster\Commands\CrudMasterCrudViewsCommand;
+use Thereline\CrudMaster\Commands\CrudMasterModelCommand;
+use Thereline\CrudMaster\Commands\CrudMasterRoutesCommand;
+use Thereline\CrudMaster\Commands\CrudMasterServiceCommand;
+use Thereline\CrudMaster\Contracts\ActionContracts\CrudMasterActionServiceContract;
+use Thereline\CrudMaster\Contracts\DataServiceContracts\CrudMasterDataServiceContract;
+use Thereline\CrudMaster\Contracts\HttpContracts\CrudMasterHttpServiceContract;
+use Thereline\CrudMaster\Services\ActionServices\CrudMasterActionService;
+use Thereline\CrudMaster\Services\DataServices\CrudMasterDataService;
+use Thereline\CrudMaster\Services\HttpServices\CrudMasterHttpService;
 
 class CrudMasterServiceProvider extends PackageServiceProvider
 {
@@ -23,23 +30,41 @@ class CrudMasterServiceProvider extends PackageServiceProvider
             ->name('crudmaster')
             ->hasConfigFile()
             ->hasViews()
+            ->hasTranslations()
+            //->hasAssets()
             ->hasMigration('create_crudmaster_table')
-            ->hasCommand(CrudMasterCommand::class);
+            ->hasCommands(
+                CrudMasterCommand::class,
+                CrudMasterCrudViewsCommand::class,
+                CrudMasterRoutesCommand::class,
+                CrudMasterControllerCommand::class,
+                CrudMasterModelCommand::class,
+                CrudMasterServiceCommand::class
+            );
     }
 
-    public function registeringPackage()
+    public function registeringPackage(): void
     {
-        // Register the repository interface and its implementation
+
+        $this->publishes([
+            __DIR__.'/../package.json' => base_path('package.json'),
+        ], 'crudmaster-assets');
+
         $this->app->bind(
-            BaseRepositoryInterface::class,
-            BaseRepository::class
+            CrudMasterHttpServiceContract::class,
+            CrudMasterHttpService::class
         );
 
-        // Register the ActionService
-        $this->app->singleton(
-            ActionServiceInterface::class, function ($app) {
-                return new ActionService($app->make());
-            });
+        // Register the  base data service
+        $this->app->bind(
+            CrudMasterDataServiceContract::class,
+            CrudMasterDataService::class
+        );
+
+        $this->app->bind(
+            CrudMasterActionServiceContract::class,
+            CrudMasterActionService::class
+        );
 
         // Register the command
         if ($this->app->runningInConsole()) {

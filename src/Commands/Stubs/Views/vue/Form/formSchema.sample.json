@@ -1,0 +1,39 @@
+{
+    "initialRows": 2,
+    "initialColumns": 2,
+    "fields": [
+        {
+            "name": "first_name",
+            "type": "input",
+            "label": "First Name",
+            "inputType": "text",
+            "required": true,
+            "row": 0,
+            "col": 0,
+            "rowSpan": 1,
+            "colSpan": 1
+        },
+        {
+            "name": "email",
+            "type": "input",
+            "label": "Email",
+            "inputType": "email",
+            "required": true,
+            "row": 0,
+            "col": 1,
+            "rowSpan": 1,
+            "colSpan": 1
+        },
+        {
+            "name": "last_name",
+            "type": "input",
+            "label": "Last Name",
+            "inputType": "text",
+            "required": true,
+            "row": 1,
+            "col": 0,
+            "rowSpan": 1,
+            "colSpan": 2
+        }
+    ]
+}

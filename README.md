@@ -29,54 +29,135 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Installation
 
-You can install the package via composer:
-
+1. Require the package via composer:
+   You can install the package via composer:
 ```bash
 composer require thereline/crudmaster
 ```
 
-You can publish and run the migrations with:
+2. Required for Front end styling
 
 ```bash
-php artisan vendor:publish --tag="crudmaster-migrations"
-php artisan migrate
+   npm install vite
+```
+```bash
+   npm install tailwindcss
+```
+
+3. Require for CrudMaster Tables
+
+* install lodash for debounce.
+```bash
+   npm install lodash
+```
+* install vue-virtual-scroller rendering the visible rows only:
+```bash
+   npm install vue-virtual-scroller
+```
+* install vue3-dragula for drag-and-drop functionality.
+```bash
+   npm install vue3-dragula
+````
+* We'll use papaparse for CSV parsing.
+```bash
+   npm install papaparse
+```
+
+4. Requirement for CrudMaster Forms
+
+```bash
+   npm install 
+   @headlessui/vue 
+   @inertiajs/inertia 
+   @inertiajs/inertia-vue3  
+   yup 
+```
+
+* Form validation and validation rules
+```bash
+   npm install 
+   @vuelidate/core  
+   @vuelidate/validators
+```
+
+* Add dark mode support using Tailwind's dark mode feature.  
+Update tailwind.config.js:
+
+```js
+   module.exports = {
+      darkMode: 'class', // Enable dark mode support
+      //rest of the code
+   }
+    
+````
+2. Publish the assets:
+
+* You can publish provider with:
+```php
+   php artisan vendor:publish  --tag=crudmaster-providers
+```
+* You should merge package's package.json with main package.json with:
+```php
+   php artisan crudmaster:merge-package-json
+
+```
+
+1. [x] You can publish and run the migrations with:
+```php
+   php artisan vendor:publish --tag="crudmaster-migrations"
+   php artisan migrate
 ```
 
 You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="crudmaster-config"
+```php
+   php artisan vendor:publish --tag="crudmaster-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
-return [
-];
+   return [
+   ];
 ```
 
 Optionally, you can publish the views using
 
-```bash
-php artisan vendor:publish --tag="crudmaster-views"
+```php
+   php artisan vendor:publish --tag="crudmaster-views"
 ```
+Optionally, you can publish the translations using
+```php
+   php artisan vendor:publish --tag=your-package-name-translations
+```
+
+3. Install the npm dependencies:
+```bash
+  npm install
+```
+
+4. Build the assets:
+```bash
+  npm run dev
+```
+
+
 
 ## Usage
 
 ```php
-$crudMaster = new Thereline\CrudMaster();
-echo $crudMaster->echoPhrase('Hello, Thereline!');
+   $crudMaster = new Thereline\CrudMaster();
+   echo $crudMaster->echoPhrase('Hello, Thereline!');
 ```
 1. Generate CRUD:
 ```php
-php artisan crudmaster:generate ModelName --columns=name,email,password --views=blade
+   php artisan crudmaster:generate ModelName --columns=name,email,password --views=blade
 ```
 
 
 ## Testing
 
 ```bash
-composer test
+   composer test
 ```
 
 ## Changelog

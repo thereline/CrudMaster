@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Model\{{resource}};
+use App\Services\{{resource}}Service;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
+use Thereline\CrudMaster\Contracts\ActionContracts\CrudMasterActionServiceContract;
+use Thereline\CrudMaster\Contracts\DataServiceContracts\CrudMasterDataServiceContract;
+use Thereline\CrudMaster\Contracts\HttpContracts\CrudMasterHttpServiceContract;
+
+class {{resource}}Controller extends Controller
+{
+
+     public function __construct(
+            public CrudMasterDataServiceContract $dataService,
+            public CrudMasterActionServiceContract $actionService,
+            public CrudMasterHttpServiceContract $httpService
+        )
+        {
+            $this->dataService->setModelClass(new {{resource}}());
+            $this->actionService->setModelName({{resource}}::class);
+
+        }
+
+
+     /**
+      * Display a listing of the {{resource}}.
+      */
+    public function index(Request $request): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+
+        $view = '{{resource}}/Index';
+
+        $data = $dataService->findAllEntities();
+        $model = $actionService->findAllAction($data);
+        return $httpService->responseHandler($request,$model,$view);
+    }
+
+     /**
+      * Show the form for creating a new {{resource}}.
+      */
+    public function create():View
+    {
+        //return Inertia::Render('{{resource}}/Create');
+        //return view('{{resource}}\Create');
+    }
+
+
+    /**
+     * Store a newly created {{resource}} in storage.
+     */
+    public function store(Request $request) : View|Response|JsonResponse|\Inertia\Response|RedirectResponse
+    {
+        $validatedData = $request->validated();
+        $redirectRoute = route('{{resource_lower}}.index');
+
+        $data = $dataService->findCreateEntity($validatedData);
+        $model = $actionService->findAllAction($data);
+        return $httpService->responseHandler($request,$model,null,$redirectRoute);
+
+    }
+
+    /**
+     * Display the specified {{resource}}.
+     */
+    public function show(Request $request)
+    {
+        $view = '{{resource}}\Show';
+        $id = $request->integer('id');
+
+        $data = $dataService->findOneEntity($id);
+        $model = $actionService->findOneAction($data);
+        return $httpService->responseHandler($request,$model,$view);
+    }
+
+    /**
+     * Show the form for editing the specified {{resource}}.
+     */
+    public function edit(Request $request)
+    {
+
+       $view = '{{resource}}\Edit';
+       $id = $request->integer('id');
+
+       $data = $dataService->findOneEntity($id);
+       $model = $actionService->findOneAction($data);
+       return $httpService->responseHandler($request,$model,$view);
+
+
+    }
+
+    /**
+     * Update the specified {{resource}} in storage.
+     */
+    public function update(Request $request)
+    {
+        $validatedData = $request->validated();
+        $redirectRoute = route('{{resource_lower}}.index');
+
+        $data = $dataService->findUpdateEntity($validatedData);
+        $model = $actionService->findUpdateAction($data);
+        return $httpService->responseHandler($request,$model,null,$redirectRoute);
+    }
+
+
+    /**
+     * Remove the specified {{resource}} from storage.
+     */
+    public function destroy(Request $request)
+    {
+        $redirectRoute = route('{{resource_lower}}.index');
+        $id = $request->integer('id');
+
+        $data = $dataService->findRemoveEntity(id);
+        $model = $actionService->findRemoveAction($data);
+        return $httpService->responseHandler($request,$model,null,$redirectRoute);
+    }
+
+
+     public function forceDelete($id)
+    {
+        $redirectRoute = route('{{resource_lower}}.index');
+        $id = $request->integer('id');
+
+        $data = $dataService->findDestroyEntity(id);
+        $model = $actionService->findDestroyAction($data);
+        return $httpService->responseHandler($request,$model,null,$redirectRoute);
+    }
+}
+
