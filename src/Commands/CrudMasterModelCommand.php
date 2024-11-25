@@ -132,7 +132,7 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
 
     protected function parseColumnsForMigration($columns): string
     {
-       
+
         $columnsArray = [];
         if (! $columns) {
             return '';
@@ -186,7 +186,7 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
         } elseif (is_array($columns)) {
             $columnsArray = $columns;
         }
-        
+
         $columnsArray = explode(',', $columns);
         $columnsSeeder = array_map(function ($column) {
             $name = explode(':', $column)[0];
