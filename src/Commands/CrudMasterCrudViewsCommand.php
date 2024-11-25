@@ -51,7 +51,7 @@ class CrudMasterCrudViewsCommand extends Command implements PromptsForMissingInp
 
         // Define the destination directory in the Laravel application
         $destinationDirectory = resource_path('js/Components');
-        $folders = ['Table', 'Form'];
+        $folders = ['Table', 'Form', 'Icons'];
         $this->componentsWriter($stubsDir, $destinationDirectory, $folders);
 
         $files = ['Index.vue', 'Create.vue', 'Show.vue', 'Edit.vue'];
@@ -113,9 +113,9 @@ class CrudMasterCrudViewsCommand extends Command implements PromptsForMissingInp
 
                 // Copy the directory and its contents
                 File::copyDirectory($stubPath, $componentPath);
-                $this->info("Copied directory: {$stubPath} to {$componentPath}");
+                $this->info("Component{$folder} created ");
             } else {
-                $this->warn("Source directory not found: {$stubPath}");
+                $this->warn("Source directory not found: {$folder}");
             }
         }
 
