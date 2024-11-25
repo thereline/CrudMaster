@@ -24,6 +24,7 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
         $resourceStudly = Str::studly($resource);
         $resourceLower = Str::lower($resource);
         $columns = $this->option('columns');
+        dd($columns);
 
         $this->generateModel($resourceStudly, $resourceLower, $columns);
 
@@ -131,9 +132,17 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
 
     protected function parseColumnsForMigration($columns): string
     {
+       
+        $columnsArray = [];
         if (! $columns) {
             return '';
         }
+        if (is_string($columns)) {
+            $columnsArray = explode(',', $columns);
+        } elseif (is_array($columns)) {
+            $columnsArray = $columns;
+        }
+
         $columnsArray = explode(',', $columns);
         $columnsMigration = array_map(function ($column) {
             [$name, $type] = explode(':', $column);
@@ -146,9 +155,16 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
 
     protected function parseColumnsForFactory($columns): string
     {
+        $columnsArray = [];
         if (! $columns) {
             return '';
         }
+        if (is_string($columns)) {
+            $columnsArray = explode(',', $columns);
+        } elseif (is_array($columns)) {
+            $columnsArray = $columns;
+        }
+
         $columnsArray = explode(',', $columns);
         $columnsFactory = array_map(function ($column) {
             $name = explode(':', $column)[0];
@@ -161,9 +177,16 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
 
     protected function parseColumnsForSeeder($columns): string
     {
+        $columnsArray = [];
         if (! $columns) {
             return '';
         }
+        if (is_string($columns)) {
+            $columnsArray = explode(',', $columns);
+        } elseif (is_array($columns)) {
+            $columnsArray = $columns;
+        }
+        
         $columnsArray = explode(',', $columns);
         $columnsSeeder = array_map(function ($column) {
             $name = explode(':', $column)[0];
