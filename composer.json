@@ -1,5 +1,6 @@
 {
     "name": "thereline/crudmaster",
+    "version":0.1.0,
     "description": "A Laravel package for easy CRUD generation. Generate models, repositories, services, controllers, and views effortlessly with customizable options for Blade or Vue.",
     "keywords": [
         "thereline",
