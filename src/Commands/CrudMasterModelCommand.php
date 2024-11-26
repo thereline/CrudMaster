@@ -24,7 +24,6 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
         $resourceStudly = Str::studly($resource);
         $resourceLower = Str::lower($resource);
         $columns = $this->option('columns');
-        dd($columns);
 
         $this->generateModel($resourceStudly, $resourceLower, $columns);
 
@@ -111,89 +110,151 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
         File::put($seederPath, $stubContent);
     }
 
-    protected function parseFillable($columns): string
+    protected function parseFillable(array | string $columns): string
     {
-        $columnsArray = [];
-        if (! $columns) {
+        if (empty($columns)) {
             return '';
         }
+
+             // Decode JSON string if provided.
         if (is_string($columns)) {
-            $columnsArray = explode(',', $columns);
-        } elseif (is_array($columns)) {
-            $columnsArray = $columns;
+            $decoded = json_decode($columns, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $columns = $decoded;
+            } else {
+                // If not JSON, assume it's a comma-separated string.
+                $columns = explode(',', $columns);
+            }
         }
-        //$columnsArray = explode(',', $columns);
+
+        // Handle array of objects or key-value pairs.
         $fillable = array_map(function ($column) {
-            return "'".explode(':', $column)[0]."'";
-        }, $columnsArray);
+            if (is_array($column) && isset($column['name'])) {
+                return "'" . $column['name'] . "'";
+            }
+            return "'" . $column . "'";
+        }, $columns);
+
 
         return implode(', ', $fillable);
     }
 
-    protected function parseColumnsForMigration($columns): string
+    protected function parseColumnsForMigration(array|string $columns): string
     {
-
-        $columnsArray = [];
-        if (! $columns) {
+        if (empty($columns)) {
             return '';
         }
+
         if (is_string($columns)) {
-            $columnsArray = explode(',', $columns);
-        } elseif (is_array($columns)) {
-            $columnsArray = $columns;
+            $decoded = json_decode($columns, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $columns = $decoded;
+            } else {
+                throw new InvalidArgumentException("Invalid JSON format provided.");
+            }
         }
 
-        $columnsArray = explode(',', $columns);
-        $columnsMigration = array_map(function ($column) {
-            [$name, $type] = explode(':', $column);
+        $migrationColumns = array_map(function ($column) {
+            if (is_array($column) && isset($column['name'], $column['type'])) {
+                $migrationLine = "\$table->{$column['type']}('{$column['name']}')";
 
-            return "\$table->{$type}('{$name}');";
-        }, $columnsArray);
+                if (isset($column['nullable']) && $column['nullable'] === true) {
+                    $migrationLine .= "->nullable()";
+                }
 
-        return implode("\n", $columnsMigration);
+                if (isset($column['default'])) {
+                    $migrationLine .= "->default('{$column['default']}')";
+                }
+
+                return $migrationLine . ';';
+            }
+
+            throw new InvalidArgumentException("Each column must have a 'name' and 'type'.");
+        }, $columns);
+
+        return  "\n    " . implode("\n    ", $migrationColumns) . "\n";
     }
 
-    protected function parseColumnsForFactory($columns): string
+    protected function parseColumnsForFactory(array|string $columns): string
     {
-        $columnsArray = [];
-        if (! $columns) {
+        if (empty($columns)) {
             return '';
         }
+
+        // Decode JSON string if provided.
         if (is_string($columns)) {
-            $columnsArray = explode(',', $columns);
-        } elseif (is_array($columns)) {
-            $columnsArray = $columns;
+            $decoded = json_decode($columns, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $columns = $decoded;
+            } else {
+                throw new InvalidArgumentException("Invalid JSON format provided.");
+            }
         }
 
-        $columnsArray = explode(',', $columns);
-        $columnsFactory = array_map(function ($column) {
-            $name = explode(':', $column)[0];
+        // Map columns to factory syntax.
+        $factoryColumns = array_map(function ($column) {
+            if (is_array($column) && isset($column['name'], $column['type'])) {
+                $faker = match ($column['type']) {
+                    'string' => "\$this->faker->word",
+                    'integer' => "\$this->faker->numberBetween(1, 100)",
+                    'boolean' => "\$this->faker->boolean",
+                    'text' => "\$this->faker->paragraph",
+                    'date' => "\$this->faker->date()",
+                    'timestamp' => "\$this->faker->dateTime()",
+                    default => "\$this->faker->word", // Fallback for unknown types.
+                };
 
-            return "'{$name}' => \$this->faker->word,";
-        }, $columnsArray);
+                return "'{$column['name']}' => {$faker}";
+            }
 
-        return implode("\n", $columnsFactory);
+            throw new InvalidArgumentException("Each column must have a 'name' and 'type'.");
+        }, $columns);
+
+        return "[\n    " . implode(",\n    ", $factoryColumns) . "\n]";
     }
 
-    protected function parseColumnsForSeeder($columns): string
+    protected function parseColumnsForSeeder(array|string $columns): string
     {
-        $columnsArray = [];
-        if (! $columns) {
+        if (empty($columns)) {
             return '';
         }
+
+        // Decode JSON string if provided.
         if (is_string($columns)) {
-            $columnsArray = explode(',', $columns);
-        } elseif (is_array($columns)) {
-            $columnsArray = $columns;
-        }
+            $decoded = json_decode($columns, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $columns = $decoded;
+            } else {
+                throw new InvalidArgumentException("Invalid JSON format provided.");
+            }
+        }        
 
-        $columnsArray = explode(',', $columns);
-        $columnsSeeder = array_map(function ($column) {
-            $name = explode(':', $column)[0];
+        // Map columns to seeder syntax.
+        $seederColumns = array_map(function ($column) {
+            if (is_array($column) && isset($column['name'], $column['type'])) {
+                $faker = match ($column['type']) {
+                    'string' => "\$this->faker->word",
+                    'integer' => "\$this->faker->numberBetween(1, 100)",
+                    'boolean' => "\$this->faker->boolean",
+                    'text' => "\$this->faker->paragraph",
+                    'date' => "\$this->faker->date()",
+                    'timestamp' => "\$this->faker->dateTime()",
+                    default => "\$this->faker->word", // Fallback for unknown types.
+                };
 
-            return "'{$name}' => \$this->faker->word,";
-        }, $columnsArray);
+                return "'{$column['name']}' => {$faker}";
+            }
 
-        return implode("\n", $columnsSeeder);
+            throw new InvalidArgumentException("Each column must have a 'name' and 'type'.");
+        }, $columns);
+
+        // Return as an array of seedable values for insertion.
+        return "[\n    " . implode(",\n    ", $seederColumns) . "\n]";
     }
+
+
+
+
+
+
 }

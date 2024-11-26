@@ -73,12 +73,12 @@ class {{ resource }}Service
             'trashed' => $request->boolean('trashed'),
         ];
         $orderBy = $request->string('order_by');
-        $orderDirection = $request->string('order_direction');
+        $orderDirection = $request->string('order_direction')??'asc';
         $perPage = $request->integer('per_page');
         $withRelations = [];
         $throughFunction = fn() => null;
 
-        $entities = $this->dataService->findAllEntity($filters, $orderBy, $orderDirection, $perPage, $withRelations, $throughFunction);
+        $entities = $this->dataService->findAllEntities($filters, $orderBy, $orderDirection, $perPage, $withRelations, $throughFunction);
         $models = $this->actionService->findAllAction($entities);
 
         return $this->httpService->responseHandler($request, $models, $view);

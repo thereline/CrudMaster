@@ -40,7 +40,6 @@ class CrudMasterCommand extends Command implements PromptsForMissingInput
                     hint: 'This will be used for all class names related to the resource',
                     transform: fn (string $value) => trim($value),
                 );
-
     }
 
     protected function getConfigSource(): string
@@ -69,7 +68,7 @@ class CrudMasterCommand extends Command implements PromptsForMissingInput
             ->confirm(label: 'With seeder?', name: 'seeder')
             ->select(
                 label: 'Which routes should be generated?',
-                options: ['api=>API routes only', 'web' => 'Web routes only', 'both ' => 'Both API and Web routes', 'none' => 'No routes'],
+                options: ['api'=>'API routes only', 'web' => 'Web routes only', 'both ' => 'Both API and Web routes', 'none' => 'No routes'],
                 default: 'both ',
                 required: true,
                 name: 'routes'
@@ -82,7 +81,7 @@ class CrudMasterCommand extends Command implements PromptsForMissingInput
             )
             ->select(
                 label: 'Which view should be generated?',
-                options: ['vue' => 'Vue with Inertia', 'blade' => 'Blade plane', 'none' => 'No Vue'],
+                options: ['vue' => 'Vue with Inertia', 'blade' => 'Blade plane', 'none' => 'No View'],
                 default: 'vue',
                 name: 'views'
             )
@@ -122,28 +121,28 @@ class CrudMasterCommand extends Command implements PromptsForMissingInput
 
     protected function generateCrudFiles(string $modelName, array $configValues): void
     {
-        $bar = $this->output->createProgressBar(100);
-        $bar->start();
-        $this->newLine();
+        //$bar = $this->output->createProgressBar(100);
+        //$bar->start();
+        //$this->newLine();
 
         $this->generateFile('model', $modelName, $configValues);
-        $this->newLine();
-        $bar->advance(20);
-        $this->generateFile('service', $modelName, $configValues);
-        $this->newLine();
-        $bar->advance(20);
-        $this->generateFile('controller', $modelName, $configValues);
-        $this->newLine();
-        $bar->advance(20);
-        $this->generateRoutes($modelName, $configValues);
-        $this->newLine();
-        $bar->advance(20);
-        $this->generateViews($modelName, $configValues);
-        $this->newLine();
-        $bar->advance(20);
+        //$bar->advance(20);
 
-        $bar->finish();
-        $this->newLine();
+        $this->generateFile('service', $modelName, $configValues);
+        //$bar->advance(20);
+
+        $this->generateFile('controller', $modelName, $configValues);
+        //$bar->advance(20);
+        
+        $this->generateRoutes($modelName, $configValues);
+        //$bar->advance(20);
+        
+        $this->generateViews($modelName, $configValues);
+        //$bar->advance(20);
+       
+
+        //$bar->finish();
+        //$this->newLine();
         $this->info('All done!');
     }
 
@@ -202,12 +201,33 @@ class CrudMasterCommand extends Command implements PromptsForMissingInput
                     required: true
                 );
 
+                $isNullable = Prompts\confirm(
+                    label: "Should column {$columnName} be nullable?",
+                    default: false
+                );
+
+                $defaultValue = null;
+
+                // Only ask for a default value if the column isn't nullable.
+                if (!$isNullable) {
+                    $defaultValue = Prompts\text(
+                        label: "Enter a default value for column {$columnName} (leave blank for none):",
+                        required: false
+                    );
+
+                    // Cast default to null if blank.
+                    $defaultValue = $defaultValue === '' ? null : $defaultValue;
+                }
+
                 $columns[] = [
                     'name' => $this->stringToPascalCase($columnName),
                     'type' => $columnType,
+                    'nullable' => $isNullable,
+                    'default' => $defaultValue,
                 ];
             }
-            $this->info('Columns: '.json_encode($columns));
+        
+            //$this->info('Columns: ' . json_encode($columns, JSON_PRETTY_PRINT));
 
             return $columns;
         }
@@ -218,7 +238,7 @@ class CrudMasterCommand extends Command implements PromptsForMissingInput
 
     protected function stringToPascalCase(string $string): string
     {
-        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $string)));
+        return str_replace(' ', '', strtolower(str_replace(['-', '_'], ' ', $string)));
     }
 
     protected function generateRoutes(string $modelName, array $configValues): void

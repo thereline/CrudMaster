@@ -50,9 +50,9 @@ class CrudMasterCrudViewsCommand extends Command implements PromptsForMissingInp
         $viewsDir = resource_path("js/Pages/{$name}");
 
         // Define the destination directory in the Laravel application
-        $destinationDirectory = resource_path('js/Components');
-        $folders = ['Table', 'Form'];
-        $this->componentsWriter($stubsDir, $destinationDirectory, $folders);
+        //$destinationDirectory = resource_path('js/Components');
+        //$folders = ['Table', 'Form', 'Icons'];
+        //$this->componentsWriter($stubsDir, $destinationDirectory, $folders);
 
         $files = ['Index.vue', 'Create.vue', 'Show.vue', 'Edit.vue'];
         $this->viewWriter($name, $files, $stubsDir, $viewsDir, $useTailwind, $useCustom);
@@ -91,7 +91,7 @@ class CrudMasterCrudViewsCommand extends Command implements PromptsForMissingInp
         }
     }
 
-    public function componentsWriter(string $sourceDir, string $destinationDir, array $components): void
+    /*public function componentsWriter(string $sourceDir, string $destinationDir, array $components): void
     {
 
         // Check if destination directory exists, and create it if necessary
@@ -113,11 +113,11 @@ class CrudMasterCrudViewsCommand extends Command implements PromptsForMissingInp
 
                 // Copy the directory and its contents
                 File::copyDirectory($stubPath, $componentPath);
-                $this->info("Copied directory: {$stubPath} to {$componentPath}");
+                $this->info("Component{$folder} created ");
             } else {
-                $this->warn("Source directory not found: {$stubPath}");
+                $this->warn("Source directory not found: {$folder}");
             }
         }
 
-    }
+    }*/
 }
