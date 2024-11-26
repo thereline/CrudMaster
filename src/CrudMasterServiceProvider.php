@@ -40,7 +40,16 @@ class CrudMasterServiceProvider extends PackageServiceProvider
                 CrudMasterControllerCommand::class,
                 CrudMasterModelCommand::class,
                 CrudMasterServiceCommand::class
-            );
+            )
+            ->hasInstallCommand(function(InstallCommand $command) {
+                $command
+                    ->publishConfigFile()
+                    ->publishAssets()
+                    ->publishMigrations()
+                    ->askToRunMigrations()
+                    ->copyAndRegisterServiceProviderInApp()
+                    ->askToStarRepoOnGitHub('thereline/crudmaster')
+            });
     }
 
     public function registeringPackage(): void
