@@ -227,7 +227,7 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
             } else {
                 throw new InvalidArgumentException("Invalid JSON format provided.");
             }
-        }
+        }        
 
         // Map columns to seeder syntax.
         $seederColumns = array_map(function ($column) {
