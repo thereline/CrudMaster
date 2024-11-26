@@ -90,7 +90,26 @@ Update tailwind.config.js:
    }
     
 ````
-2. Publish the assets:
+5. Requirements for CrudPanels
+
+``` bash
+      npm install 
+      vue 
+      vue-router 
+      vuex 
+      @inertiajs/inertia 
+      @inertiajs/inertia-vue3 
+      tailwindcss 
+      @headlessui/vue 
+      i18next 
+      i18next-browser-languagedetector 
+      i18next-http-backend
+
+```
+
+
+
+6. Publish the assets:
 
 * You can publish provider with:
 ```php

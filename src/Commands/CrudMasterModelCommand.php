@@ -172,7 +172,7 @@ class CrudMasterModelCommand extends Command implements PromptsForMissingInput
             throw new InvalidArgumentException("Each column must have a 'name' and 'type'.");
         }, $columns);
 
-        return  "\n    " . implode(",\n    ", $migrationColumns) . "\n";
+        return  "\n    " . implode("\n    ", $migrationColumns) . "\n";
     }
 
     protected function parseColumnsForFactory(array|string $columns): string

@@ -22,10 +22,7 @@ class {{resource}}Controller extends Controller
       */
     public function index(Request $request): View|Response|JsonResponse|\Inertia\Response|RedirectResponse
     {
-        return $this->{{resource_lower}}Service->getAll(
-        Request:$request,
-        View:'{{resource}}/Index'
-        );
+        return $this->{{resource_lower}}Service->getAll($request,'{{resource}}/Index');
     }
 
      /**
