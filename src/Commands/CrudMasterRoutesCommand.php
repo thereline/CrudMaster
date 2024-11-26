@@ -63,13 +63,17 @@ class CrudMasterRoutesCommand extends Command implements PromptsForMissingInput
     protected function mergeRoutes($type, $stubContent, $stubCommonContent): void
     {
         $routeFile = base_path("routes/{$type}.php");
+
+        //$webRoutesPath = base_path('routes/web.php');
+        //$apiRoutesPath = base_path('routes/api.php');
+
         // Ensure routes/web.php exists
         if (! File::exists($routeFile)) {
             File::put($routeFile, $stubContent);
         }
         $existingContent = File::get($routeFile);
 
-        if (! str_contains($existingContent, $stubContent)) {
+        if (! str_contains($existingContent, $stubCommonContent)) {
 
             File::append($routeFile, PHP_EOL.PHP_EOL.$stubCommonContent);
             $this->info("Routes merged into routes/{$type}.php.");
